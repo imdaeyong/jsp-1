@@ -33,6 +33,9 @@ public class SQL {
 											+ "regip=?,"
 											+ "rdate=NOW()";
 	
+	public static final String SELECT_LIST = "SELECT a.*, b.nick FROM `JSP_BOARD` AS a "
+										   + "JOIN `JSP_USER` AS b ON a.uid = b.uid;";
+	
 	
 }
 
