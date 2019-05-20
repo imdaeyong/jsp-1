@@ -20,48 +20,21 @@
 		// 로그인을 안했을때
 		response.sendRedirect("./user/login.jsp?result=101");
 	}else{
+		request.setCharacterEncoding("UTF-8");
+		String pg = request.getParameter("pg");
 		
 		BoardService bs = new BoardService();
 		
 		int total = bs.getTotalBoard();
 		totalPage = bs.getTotalPage(total);
 		
+		int start = bs.getStartForLimit(pg);
 		
 		// 로그인을 했을때
 		nick = ub.getNick();
 		
-		//1단계, 2단계
- 		Connection conn = DBConfig.getConnection();
 		
-		//3단계
-		PreparedStatement psmt = conn.prepareStatement(SQL.SELECT_LIST);
-		
-		//4단계
-		ResultSet rs = psmt.executeQuery();
-		
-		//5단계
-		while(rs.next()){
-			BoardBean bb = new BoardBean();
-			bb.setSeq(rs.getInt(1));
-			bb.setParent(rs.getInt(2));
-			bb.setComment(rs.getInt(3));
-			bb.setCate(rs.getString(4));
-			bb.setTitle(rs.getString(5));
-			bb.setContent(rs.getString(6));
-			bb.setFile(rs.getInt(7));
-			bb.setHit(rs.getInt(8));
-			bb.setUid(rs.getString(9));
-			bb.setRegip(rs.getString(10));
-			bb.setRdate(rs.getString(11));
-			bb.setNick(rs.getString(12));
-			
-			list.add(bb);
-		}
-		
-		//6단계
-		rs.close();
-		psmt.close();
-		conn.close();
+		list = bs.getBoardList(start);
 	}
 	
 %>
@@ -106,7 +79,7 @@
 				<a href="#" class="prev">이전</a>
 				
 				<% for(int i=1 ; i<=totalPage ; i++){ %>
-					<a href="#" class="num"><%= i %></a>
+					<a href="./list.jsp?pg=<%= i %>" class="num"><%= i %></a>
 				<% } %>
 				
 				<a href="#" class="next">다음</a>
