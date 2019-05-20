@@ -1,3 +1,4 @@
+<%@page import="kr.co.board1.service.BoardService"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="kr.co.board1.bean.BoardBean"%>
@@ -13,11 +14,19 @@
 	String nick = null;
 
 	List<BoardBean> list = new ArrayList<>();
+	int totalPage = 0;
 	
 	if(ub == null){
 		// 로그인을 안했을때
 		response.sendRedirect("./user/login.jsp?result=101");
 	}else{
+		
+		BoardService bs = new BoardService();
+		
+		int total = bs.getTotalBoard();
+		totalPage = bs.getTotalPage(total);
+		
+		
 		// 로그인을 했을때
 		nick = ub.getNick();
 		
@@ -95,7 +104,11 @@
 			<nav class="paging">
 				<span> 
 				<a href="#" class="prev">이전</a>
-				<a href="#" class="num">1</a>
+				
+				<% for(int i=1 ; i<=totalPage ; i++){ %>
+					<a href="#" class="num"><%= i %></a>
+				<% } %>
+				
 				<a href="#" class="next">다음</a>
 				</span>
 			</nav>

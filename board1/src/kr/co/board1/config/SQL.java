@@ -36,6 +36,7 @@ public class SQL {
 	public static final String SELECT_LIST = "SELECT a.*, b.nick FROM `JSP_BOARD` AS a "
 										   + "JOIN `JSP_USER` AS b ON a.uid = b.uid;";
 	
+	public static final String SELECT_COUNT_TOTAL = "SELECT COUNT(*) FROM `JSP_BOARD`";
 	
 }
 
