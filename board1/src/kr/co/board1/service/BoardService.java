@@ -15,6 +15,19 @@ import kr.co.board1.config.SQL;
 
 public class BoardService {
 
+	// 싱글톤 객체
+	private static BoardService service = new BoardService();
+	
+	private BoardService() {}
+	public static BoardService getIntance(){
+		return service;
+	}
+	
+	
+	// 목록용 카운트 번호 구하기
+	public int getListStartCount(int total, int start) {
+		return total-start;
+	}
 	
 	// Limit용 Start값 구하기
 	public int getStartForLimit(String pg) {

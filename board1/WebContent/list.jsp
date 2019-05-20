@@ -15,26 +15,28 @@
 
 	List<BoardBean> list = new ArrayList<>();
 	int totalPage = 0;
+	int listCount = 0;
 	
 	if(ub == null){
 		// 로그인을 안했을때
 		response.sendRedirect("./user/login.jsp?result=101");
 	}else{
+		// 로그인을 했을때
+		nick = ub.getNick();
+		
 		request.setCharacterEncoding("UTF-8");
 		String pg = request.getParameter("pg");
 		
-		BoardService bs = new BoardService();
+		BoardService bs = BoardService.getIntance();
 		
 		int total = bs.getTotalBoard();
 		totalPage = bs.getTotalPage(total);
 		
-		int start = bs.getStartForLimit(pg);
-		
-		// 로그인을 했을때
-		nick = ub.getNick();
-		
-		
+		int start = bs.getStartForLimit(pg);				
 		list = bs.getBoardList(start);
+		
+		// 목록 출력용 번호
+		listCount = bs.getListStartCount(total, start);
 	}
 	
 %>
@@ -63,7 +65,7 @@
 				
 				<% for(BoardBean bb : list){ %>
 					<tr>
-						<td><%= bb.getSeq() %></td>
+						<td><%= listCount-- %></td>
 						<td><a href="#"><%= bb.getTitle() %></a>&nbsp;[<%= bb.getComment() %>]</td>
 						<td><%= bb.getNick() %></td>
 						<td><%= bb.getRdate().substring(2, 10) %></td>
