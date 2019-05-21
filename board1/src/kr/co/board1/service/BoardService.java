@@ -24,7 +24,6 @@ public class BoardService {
 		return service;
 	}
 	
-	
 	// 목록용 카운트 번호 구하기
 	public int getListStartCount(int total, int start) {
 		return total-start;
@@ -77,7 +76,6 @@ public class BoardService {
 		
 		return groupStartEnd;
 	}
-	
 	
 	// 전체 페이지 수 구하기
 	public int getTotalPage(int boardTotal) {
@@ -164,5 +162,74 @@ public class BoardService {
 	// 게시물 추가하기
 	public void insertBoard() {}
 	
+	// 조회수 업데이터
+	public void updateHit(String seq) throws Exception {
+		//1단계, 2단계
+		Connection conn = DBConfig.getConnection();
+		
+		//3단계
+		PreparedStatement psmt = conn.prepareStatement(SQL.UPDATE_HIT);
+		psmt.setString(1, seq);	
+		
+		//4단계
+		psmt.executeUpdate();
+		
+		//5단계		
+		//6단계
+		psmt.close();
+		conn.close();		
+	}
+	
+	// 글보기 SELECT
+	public BoardBean viewBoard(String seq) throws Exception {
+		//1단계, 2단계
+		Connection conn = DBConfig.getConnection();
+		
+		//3단계
+		PreparedStatement psmt = conn.prepareStatement(SQL.SELECT_VIEW);
+		psmt.setString(1, seq);
+		
+		//4단계
+		ResultSet rs = psmt.executeQuery();
+		
+		//5단계
+		BoardBean bb = new BoardBean();
+		
+		if(rs.next()){		
+			bb.setSeq(rs.getInt(1));
+			bb.setParent(rs.getInt(2));
+			bb.setComment(rs.getInt(3));
+			bb.setCate(rs.getString(4));
+			bb.setTitle(rs.getString(5));
+			bb.setContent(rs.getString(6));
+			bb.setFile(rs.getInt(7));
+			bb.setHit(rs.getInt(8));
+			bb.setUid(rs.getString(9));
+			bb.setRegip(rs.getString(10));
+			bb.setRdate(rs.getString(11));				
+		}
+		
+		//6단계
+		rs.close();
+		psmt.close();
+		conn.close();
+		
+		return bb;
+	}
+	
 	
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -16,6 +16,7 @@
 	List<BoardBean> list = new ArrayList<>();
 	int totalPage = 0;
 	int listCount = 0;
+	int current = 0;
 	int[] groupStartEnd = new int[2];
 	
 	if(ub == null){
@@ -42,6 +43,8 @@
 		// 목록 페이지 그룹 번호
 		groupStartEnd = bs.getPageGroupStartEnd(pg, totalPage);
 		
+		// 현재 페이지번호
+		current = bs.getCurrentPage(pg);
 	}
 	
 %>
@@ -71,7 +74,7 @@
 				<% for(BoardBean bb : list){ %>
 					<tr>
 						<td><%= listCount-- %></td>
-						<td><a href="#"><%= bb.getTitle() %></a>&nbsp;[<%= bb.getComment() %>]</td>
+						<td><a href="./view.jsp?pg=<%= current %>&seq=<%= bb.getSeq() %>"><%= bb.getTitle() %></a>&nbsp;[<%= bb.getComment() %>]</td>
 						<td><%= bb.getNick() %></td>
 						<td><%= bb.getRdate().substring(2, 10) %></td>
 						<td><%= bb.getHit() %></td>
@@ -83,13 +86,19 @@
 			<!-- 페이징 -->
 			<nav class="paging">
 				<span> 
-				<a href="./list.jsp?pg=<%= groupStartEnd[0] - 1 %>" class="prev">이전</a>
-				
-				<% for(int i=groupStartEnd[0] ; i<=groupStartEnd[1] ; i++){ %>
-					<a href="./list.jsp?pg=<%= i %>" class="num"><%= i %></a>
+				<% if(groupStartEnd[0] > 1){ %>
+					<a href="./list.jsp?pg=<%= groupStartEnd[0] - 1 %>" class="prev">이전</a>
 				<% } %>
 				
-				<a href="./list.jsp?pg=<%= groupStartEnd[1] + 1 %>" class="next">다음</a>
+				<% for(int i=groupStartEnd[0] ; i<=groupStartEnd[1] ; i++){ %>
+					
+					<a href="./list.jsp?pg=<%= i %>" class="num <%= (current == i)?"current":"" %>"><%= i %></a>
+					
+				<% } %>
+				
+				<% if(groupStartEnd[1] < totalPage){ %>
+					<a href="./list.jsp?pg=<%= groupStartEnd[1] + 1 %>" class="next">다음</a>
+				<% } %>
 				</span>
 			</nav>
 			<a href="/board1/write.jsp" class="btnWrite">글쓰기</a>
