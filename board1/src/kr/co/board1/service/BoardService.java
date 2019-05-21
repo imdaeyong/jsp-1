@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import org.apache.catalina.LifecycleListener;
@@ -29,6 +30,20 @@ public class BoardService {
 		return total-start;
 	}
 	
+	// 현재 페이지 
+	public int getCurrentPage(String pg) {
+		
+		int current = 0;
+		
+		if(pg == null) {
+			current = 1;
+		}else {
+			current = Integer.parseInt(pg);
+		}
+		
+		return current;
+	}
+	
 	// Limit용 Start값 구하기
 	public int getStartForLimit(String pg) {
 		
@@ -42,6 +57,25 @@ public class BoardService {
 		}
 				
 		return (start - 1) * 10;
+	}
+	
+	// 페이지그룹 계산하기
+	public int[] getPageGroupStartEnd(String pg, int totalPage) {
+		int[] groupStartEnd = new int[2];
+		
+		int current = getCurrentPage(pg);
+		int currentGroup = (int) Math.ceil(current/10.0);
+		int groupStart = (currentGroup - 1) * 10 + 1;
+		int groupEnd   = currentGroup * 10;
+		
+		if(groupEnd > totalPage){
+			groupEnd = totalPage;
+		}
+		
+		groupStartEnd[0] = groupStart;
+		groupStartEnd[1] = groupEnd;
+		
+		return groupStartEnd;
 	}
 	
 	
